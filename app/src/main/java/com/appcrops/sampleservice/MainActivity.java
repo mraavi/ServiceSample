@@ -1,13 +1,15 @@
 package com.appcrops.sampleservice;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +20,8 @@ import com.appcrops.sampleservice.MyIntentBindService.MyBinder;
 public class MainActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getName();
     private MyIntentBindService mMyIntentBindService;
+    private MyBroadcastReceiver mMyBroadcastReceiver;
+    public TextView mBrocastCastProgressTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
         Button stopIntentBtn = (Button) findViewById(R.id.stop_intent_service_btn);
         Button bindServiceBtn = (Button) findViewById(R.id.bind_service_btn);
         final TextView bindServiceTxt = (TextView) findViewById(R.id.bind_service_txt);
+        mBrocastCastProgressTxt = (TextView) findViewById(R.id.brodcast_receiver_txt);
+        Button startBrodcastServiceBtn = (Button) findViewById(R.id.service_brodcast_btn) ;
+
         startServiceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,6 +93,33 @@ public class MainActivity extends AppCompatActivity {
 
         bindService(new Intent(MainActivity.this, MyIntentBindService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
 
+
+
+
+
+        //Brocaster Service Ex
+
+        mMyBroadcastReceiver = new MyBroadcastReceiver();
+
+        startBrodcastServiceBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startService(new Intent(MainActivity.this, MyIntentServiceBroadcaster.class));
+            }
+        });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //unregisterReceiver(mMyBroadcastReceiver);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter(MyIntentServiceBroadcaster.PROGRESS_ACTION);
+        registerReceiver(mMyBroadcastReceiver ,intentFilter);
     }
 
 
@@ -103,4 +137,20 @@ public class MainActivity extends AppCompatActivity {
             mMyIntentBindService = null;
         }
     };
+
+    public class MyBroadcastReceiver extends BroadcastReceiver {
+
+        public MyBroadcastReceiver () {
+            super();
+        }
+
+        @Override
+        public void onReceive(Context var1, Intent intent) {
+            Log.d(TAG, "MyBroadcastReceiver-onReceive");
+            if (intent.getAction() == MyIntentServiceBroadcaster.PROGRESS_ACTION) {
+                int proressPer = intent.getIntExtra("progress", 0);
+                mBrocastCastProgressTxt.setText("Progress: " + proressPer + "%");
+            }
+        }
+    }
 }

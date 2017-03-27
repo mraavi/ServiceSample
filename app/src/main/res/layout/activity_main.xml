@@ -67,4 +67,18 @@
         android:layout_height="wrap_content"
         android:text="Get Text from Bind Service"
         android:layout_below="@+id/bind_service_txt"/>
+
+    <TextView
+        android:id="@+id/brodcast_receiver_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="I show progress update from Broadcast"
+        android:layout_below="@+id/bind_service_btn"/>
+
+    <Button
+        android:id="@+id/service_brodcast_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Service To Brodcast"
+        android:layout_below="@+id/brodcast_receiver_txt"/>
 </RelativeLayout>

@@ -25,7 +25,16 @@
             android:exported="false" />
         <service
             android:name=".MyIntentBindService"
+            android:exported="false" />
+        <service
+            android:name=".MyIntentServiceBroadcaster"
             android:exported="false"></service>
+       <!-- <receiver android:name=".MainActivity$MyBroadcastReceiver">
+            <intent-filter>
+                <action android:name="COM.SAMPLE_ACTION_PROGRESS"/>
+            </intent-filter>
+        </receiver> -->
+
     </application>
 
 </manifest>
